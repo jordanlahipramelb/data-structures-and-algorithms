@@ -77,18 +77,23 @@ class LinkedList {
 
   /** //! pop(): return & remove last item. */
 
-  pop() {}
+  pop() {
+    // retrieve last index which is the length minus 1
+    return this.removeAt(this.length - 1);
+  }
 
   /** //! shift(): return & remove first item. */
 
-  shift() {}
+  shift() {
+    return this.removeAt(0);
+  }
 
   /** //! getAt(idx): get val at idx. */
 
   getAt(idx) {
     // if index does not exist
-    if (idx >= length || idx < 0) {
-      throw new Error("Index invalid.");
+    if (idx >= this.length || idx < 0) {
+      throw new Error("Invalid index.");
     }
 
     // retrieve the value of node by retrieving the node through getNode
@@ -99,18 +104,52 @@ class LinkedList {
 
   /** //! setAt(idx, val): set val at idx to val */
 
-  setAt(idx, val) {}
+  setAt(idx, val) {
+    // if index does not exist
+    if (idx >= this.length || idx < 0) {
+      throw new Error("Invalid index.");
+    }
+
+    // retrieve last node via idx
+    let current = this.getNode(idx);
+
+    // set current val to val
+    current.val = val;
+  }
 
   /** //! insertAt(idx, val): add node w/val before idx. */
 
-  insertAt(idx, val) {}
+  insertAt(idx, val) {
+    // if index does not exist
+    if (idx > this.length || idx < 0) {
+      throw new Error("Invalid index.");
+    }
+
+    // use unshift to insert value to beginning
+    if (idx === 0) return this.unshift(val);
+    // use push to insert value to last index
+    if (idx === this.length) return this.push(val);
+
+    // get the node before it
+    let prev = this.getNode(idx - 1);
+
+    /** Setup new Node */
+    // create Node withj val
+    let newNode = new Node(val);
+    // set the next property to thje next property of prev node
+    newNode.next = prev.next;
+    // next property of prev then becomes newNode
+    prev.next = newNode;
+
+    this.length += 1;
+  }
 
   /** //! removeAt(idx): return & remove item at idx, */
 
   removeAt(idx) {
     // if index does not exist
-    if (idx >= length || idx < 0) {
-      throw new Error("Index invalid.");
+    if (idx >= this.length || idx < 0) {
+      throw new Error("Invalid index.");
     }
 
     /** if removing first item */
@@ -125,10 +164,7 @@ class LinkedList {
       this.length -= 1;
 
       // if only 1 Node, the tail is the head
-      if (this.length < 2) {
-        this.tail = this.head;
-      }
-
+      if (this.length < 2) this.tail = this.head;
       return val;
     }
 
@@ -164,7 +200,25 @@ class LinkedList {
 
   /** //! average(): return an average of all values in the list */
 
-  average() {}
+  average() {
+    if (this.length === 0) return 0;
+
+    // start at 0
+    let total = 0;
+    // set head to current in order to start loop from there
+    let current = this.head;
+
+    // loop starting from current
+    while (current) {
+      // add the val of each node to total
+      total += current.val;
+      // this helps move to the next node
+      current = current.next;
+    }
+
+    // obtain average via total divided by length
+    return total / this.length;
+  }
 }
 
 module.exports = LinkedList;
